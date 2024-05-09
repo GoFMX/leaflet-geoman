@@ -169,7 +169,6 @@ const PMButton = L.Control.extend({
             callback: (event, action) => {
               const colorIcon = head(action.children);
               colorIcon.style.backgroundColor = event.activeColor;
-              console.log('Color should be changing...', colorIcon);
             },
           },
         ],
