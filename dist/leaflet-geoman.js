@@ -8989,7 +8989,7 @@
     }
     th.exports = N_;
   });
-  var rh = G((tx, ih) => {
+  var rh = G((t0, ih) => {
     function G_(t) {
       var i = [];
       if (t != null) for (var n in Object(t)) i.push(n);
@@ -8997,7 +8997,7 @@
     }
     ih.exports = G_;
   });
-  var oh = G((ex, nh) => {
+  var oh = G((e0, nh) => {
     var F_ = De(),
       q_ = kn(),
       Z_ = rh(),
@@ -9013,7 +9013,7 @@
     }
     nh.exports = H_;
   });
-  var Bn = G((ix, ah) => {
+  var Bn = G((i0, ah) => {
     var j_ = eh(),
       K_ = oh(),
       W_ = Dr();
@@ -9022,7 +9022,7 @@
     }
     ah.exports = Y_;
   });
-  var lh = G((rx, sh) => {
+  var lh = G((r0, sh) => {
     var $_ = $l(),
       X_ = Bn();
     function J_(t) {
@@ -9030,7 +9030,7 @@
     }
     sh.exports = J_;
   });
-  var ph = G((nx, dh) => {
+  var ph = G((n0, dh) => {
     var hh = wn(),
       Q_ = Qs(),
       ty = al(),
@@ -9080,7 +9080,7 @@
     }
     dh.exports = uy;
   });
-  var _h = G((ox, gh) => {
+  var _h = G((o0, gh) => {
     var cy = Fs(),
       fy = wn(),
       dy = Ws(),
@@ -9104,13 +9104,13 @@
     }
     gh.exports = mh;
   });
-  var An = G((ax, yh) => {
+  var An = G((a0, yh) => {
     function yy(t) {
       return t;
     }
     yh.exports = yy;
   });
-  var Lh = G((sx, vh) => {
+  var Lh = G((s0, vh) => {
     function vy(t, i, n) {
       switch (n.length) {
         case 0:
@@ -9126,7 +9126,7 @@
     }
     vh.exports = vy;
   });
-  var xh = G((lx, wh) => {
+  var xh = G((l0, wh) => {
     var Ly = Lh(),
       bh = Math.max;
     function by(t, i, n) {
@@ -9147,7 +9147,7 @@
     }
     wh.exports = by;
   });
-  var Mh = G((hx, kh) => {
+  var Mh = G((h0, kh) => {
     function wy(t) {
       return function () {
         return t;
@@ -9155,7 +9155,7 @@
     }
     kh.exports = wy;
   });
-  var Eh = G((ux, Ph) => {
+  var Eh = G((u0, Ph) => {
     var xy = Mh(),
       Ch = bn(),
       ky = An(),
@@ -9171,7 +9171,7 @@
         : ky;
     Ph.exports = My;
   });
-  var Th = G((cx, Sh) => {
+  var Th = G((c0, Sh) => {
     var Cy = 800,
       Py = 16,
       Ey = Date.now;
@@ -9189,13 +9189,13 @@
     }
     Sh.exports = Sy;
   });
-  var Bh = G((fx, Dh) => {
+  var Bh = G((f0, Dh) => {
     var Ty = Eh(),
       Dy = Th(),
       By = Dy(Ty);
     Dh.exports = By;
   });
-  var Oh = G((dx, Ah) => {
+  var Oh = G((d0, Ah) => {
     var Ay = An(),
       Oy = xh(),
       Ry = Bh();
@@ -9204,7 +9204,7 @@
     }
     Ah.exports = Iy;
   });
-  var Ih = G((px, Rh) => {
+  var Ih = G((p0, Rh) => {
     var zy = Fi(),
       Ny = Dr(),
       Gy = Dn(),
@@ -9220,7 +9220,7 @@
     }
     Rh.exports = qy;
   });
-  var Nh = G((mx, zh) => {
+  var Nh = G((m0, zh) => {
     var Zy = Oh(),
       Uy = Ih();
     function Vy(t) {
@@ -9244,7 +9244,7 @@
     }
     zh.exports = Vy;
   });
-  var Br = G((gx, Gh) => {
+  var Br = G((g0, Gh) => {
     var Hy = _h(),
       jy = Nh(),
       Ky = jy(function (t, i, n) {
@@ -9252,7 +9252,7 @@
       });
     Gh.exports = Ky;
   });
-  var Ar = G((S0, bu) => {
+  var Ar = G((Sx, bu) => {
     var Bv = fi(),
       Av = Ye(),
       Ov = '[object Symbol]';
@@ -9261,7 +9261,7 @@
     }
     bu.exports = Rv;
   });
-  var xu = G((T0, wu) => {
+  var xu = G((Tx, wu) => {
     var Iv = _i(),
       zv = Ar(),
       Nv = /\.|\[(?:[^[\]]*|(["'])(?:(?!\1)[^\\]|\\.)*?\1)\]/,
@@ -9279,7 +9279,7 @@
     }
     wu.exports = Fv;
   });
-  var Cu = G((D0, Mu) => {
+  var Cu = G((Dx, Mu) => {
     var ku = Ln(),
       qv = 'Expected a function';
     function Rn(t, i) {
@@ -9298,7 +9298,7 @@
     Rn.Cache = ku;
     Mu.exports = Rn;
   });
-  var Eu = G((B0, Pu) => {
+  var Eu = G((Bx, Pu) => {
     var Zv = Cu(),
       Uv = 500;
     function Vv(t) {
@@ -9310,7 +9310,7 @@
     }
     Pu.exports = Vv;
   });
-  var Tu = G((A0, Su) => {
+  var Tu = G((Ax, Su) => {
     var Hv = Eu(),
       jv =
         /[^.[\]]+|\[(?:(-?\d+(?:\.\d+)?)|(["'])((?:(?!\2)[^\\]|\\.)*?)\2)\]|(?=(?:\.|\[\])(?:\.|\[\]|$))/g,
@@ -9327,7 +9327,7 @@
       });
     Su.exports = Wv;
   });
-  var Bu = G((O0, Du) => {
+  var Bu = G((Ox, Du) => {
     function Yv(t, i) {
       for (var n = -1, o = t == null ? 0 : t.length, s = Array(o); ++n < o; )
         s[n] = i(t[n], n, t);
@@ -9335,7 +9335,7 @@
     }
     Du.exports = Yv;
   });
-  var Nu = G((R0, zu) => {
+  var Nu = G((Rx, zu) => {
     var Au = Pr(),
       $v = Bu(),
       Xv = _i(),
@@ -9352,14 +9352,14 @@
     }
     zu.exports = Iu;
   });
-  var Fu = G((I0, Gu) => {
+  var Fu = G((Ix, Gu) => {
     var tL = Nu();
     function eL(t) {
       return t == null ? '' : tL(t);
     }
     Gu.exports = eL;
   });
-  var Zu = G((z0, qu) => {
+  var Zu = G((zx, qu) => {
     var iL = _i(),
       rL = xu(),
       nL = Tu(),
@@ -9369,7 +9369,7 @@
     }
     qu.exports = aL;
   });
-  var Vu = G((N0, Uu) => {
+  var Vu = G((Nx, Uu) => {
     var sL = Ar(),
       lL = 1 / 0;
     function hL(t) {
@@ -9379,7 +9379,7 @@
     }
     Uu.exports = hL;
   });
-  var ju = G((G0, Hu) => {
+  var ju = G((Gx, Hu) => {
     var uL = Zu(),
       cL = Vu();
     function fL(t, i) {
@@ -9389,7 +9389,7 @@
     }
     Hu.exports = fL;
   });
-  var $i = G((F0, Ku) => {
+  var $i = G((Fx, Ku) => {
     var dL = ju();
     function pL(t, i, n) {
       var o = t == null ? void 0 : dL(t, i);
@@ -13990,6 +13990,7 @@
       husky: '^9.0.7',
       leaflet: '1.9.3',
       'lint-staged': '^15.2.1',
+      nodemon: '^3.1.0',
       prettier: '3.2.4',
       'prosthetic-hand': '1.3.1',
       'ts-node': '^10.9.2',
@@ -14007,6 +14008,7 @@
       prettier:
         'prettier --write "{src,cypress,demo}/**/*.{js,css}" --log-level=warn',
       lint: 'pnpm run eslint && pnpm run prettier',
+      watch: "nodemon -e js,ts --watch src --exec 'npm run build'",
     },
     repository: {
       type: 'git',
@@ -16209,7 +16211,7 @@
         </div>
         <div class='arrow-visible-prop' style='margin-bottom: 0.5rem;'>
           <label for='draw-arrow-frequency' class='form-label'>Arrow Spacing</label>
-          <input type='range' class='form-range' id='draw-arrow-frequency' min='50' max='200' value='${this._setDrawArrowLineSelectorValue(t.frequency)}' style='direction: rtl;'>
+          <input type='range' class='form-range' id='draw-arrow-frequency' min='50' max='200' value='${this._setDrawArrowLineSelectorValue(t.frequency)}'>
         </div>
         <div class='arrow-visible-prop' style='margin-bottom: 0.5rem;'>
           <label for='draw-arrow-angle' class='form-label'>Arrow Angle</label>
@@ -16228,7 +16230,7 @@
             ? (i = 'endonly')
             : t >= 120 && t <= 130
               ? (i = 'allvertices')
-              : (i = `${t}px`),
+              : (i = `${250 - t}px`),
           i
         );
       },
@@ -16236,13 +16238,13 @@
         let i = t.replace('px', '') || 'endonly',
           n = Number.isNaN(+i);
         return i === 'endonly'
-          ? 200
+          ? 50
           : i === 'allvertices'
             ? 125
             : n
               ? i >= 120 && i <= 130
                 ? 125
-                : +i
+                : 250 - i
               : i;
       },
       initDrawArrowLineFilledChangedListener(t, i) {
@@ -16371,7 +16373,7 @@
         </div>
         <div class='arrow-visible-prop' style='margin-bottom: 0.5rem;'>
           <label for='edit-arrow-frequency' class='form-label'>Arrow Spacing</label>
-          <input type='range' class='form-range' id='edit-arrow-frequency' min='50' max='200' value='${this._setEditArrowLineSelectorValue(t.frequency)}' style='direction: rtl;'>
+          <input type='range' class='form-range' id='edit-arrow-frequency' min='50' max='200' value='${this._setEditArrowLineSelectorValue(t.frequency)}'>
         </div>
         <div class='arrow-visible-prop' style='margin-bottom: 0.5rem;'>
           <label for='edit-arrow-angle' class='form-label'>Arrow Angle</label>
@@ -16390,7 +16392,7 @@
             ? (i = 'endonly')
             : t >= 120 && t <= 130
               ? (i = 'allvertices')
-              : (i = `${t}px`),
+              : (i = `${250 - t}px`),
           i
         );
       },
@@ -16398,13 +16400,13 @@
         let i = t.replace('px', '') || 'endonly',
           n = Number.isNaN(+i);
         return i === 'endonly'
-          ? 200
+          ? 50
           : i === 'allvertices'
             ? 125
             : n
               ? i >= 120 && i <= 130
                 ? 125
-                : +i
+                : 250 - i
               : i;
       },
       toggleEditArrowLinePropVisibility(t) {
@@ -23237,6 +23239,9 @@
           )),
           i
         );
+      },
+      reverseNumber(t, i, n) {
+        return i + t - n;
       },
       findMarkers(t) {
         let i = [];
