@@ -18871,7 +18871,7 @@
         (this._shape = 'ArrowLine'),
         (this.toolbarButtonName = 'drawArrowLine'),
         (this._doesSelfIntersect = !1),
-        (this._arrowheadOptions = {
+        (this._defaultArrowheadOptions = {
           fill: !1,
           frequency: 'endonly',
           yawn: 30,
@@ -18882,6 +18882,7 @@
     },
     enable(t) {
       L.Util.setOptions(this, t),
+        (this._arrowheadOptions = { ...this._defaultArrowheadOptions }),
         this.openDialog(),
         (this._enabled = !0),
         (this._markers = []),
