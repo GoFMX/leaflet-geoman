@@ -15740,13 +15740,14 @@
         );
       },
       _fireUpdate(t = 'Edit', i = {}) {
-        this.__fire(
-          this._layer,
-          'pm:update',
-          { layer: this._layer, shape: this.getShape() },
-          t,
-          i
-        );
+        console.log('update', this),
+          this.__fire(
+            this._layer,
+            'pm:update',
+            { layer: this._layer, shape: this.getShape() },
+            t,
+            i
+          );
       },
       _fireMarkerDragStart(t, i = void 0, n = 'Edit', o = {}) {
         this.__fire(
@@ -17874,7 +17875,7 @@
           Line: 'drawPolyline',
           CircleMarker: 'drawCircleMarker',
           Edit: 'editMode',
-          EditArrowLine: 'editArrowLine',
+          EditArrowLine: 'arrowEditMode',
           ColorChange: 'colorChangeMode',
           Drag: 'dragMode',
           Cut: 'cutPolygon',
@@ -18335,6 +18336,7 @@
           drawRectangle: 'Rectangle',
           drawCircleMarker: 'CircleMarker',
           editMode: 'Edit',
+          editArrowLine: 'Edit Arrows',
           dragMode: 'Drag',
           cutPolygon: 'Cut',
           removalMode: 'Removal',
