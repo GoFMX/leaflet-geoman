@@ -16892,6 +16892,15 @@
       removeControls() {
         this.Toolbar.removeControls();
       },
+      disableAllModes() {
+        this.disableGlobalCutMode(),
+          this.disableGlobalEditMode(),
+          this.disableGlobalDragMode(),
+          this.disableGlobalRotateMode(),
+          this.disableGlobalRemovalMode(),
+          this.disableGlobalArrowEditMode(),
+          this.disableGlobalColorChangeMode();
+      },
       toggleControls() {
         this.Toolbar.toggleControls();
       },
