@@ -18205,6 +18205,7 @@
         snapMiddle: !1,
         allowSelfIntersection: !0,
         tooltips: !0,
+        color: '#3388ff',
         templineStyle: {},
         hintlineStyle: { color: '#3388ff', dashArray: '5,5' },
         pathOptions: null,
