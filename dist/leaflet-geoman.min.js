@@ -15273,7 +15273,6 @@
           this._fireGlobalEditModeToggled(!0);
       },
       disableGlobalEditMode() {
-        if (!this._globalEditModeEnabled) return;
         (this._globalEditModeEnabled = !1),
           L.PM.Utils.findLayers(this.map).forEach((i) => {
             i.pm.disable();
@@ -15355,7 +15354,6 @@
           this._fireGlobalArrowEditModeToggled(!0);
       },
       disableGlobalArrowEditMode() {
-        if (!this._globalArrowEditModeEnabled) return;
         (this._globalArrowEditModeEnabled = !1),
           L.PM.Utils.findLines(this.map).forEach((i) => {
             i.pm.disable();
@@ -15421,7 +15419,6 @@
           this._fireGlobalDragModeToggled(!0);
       },
       disableGlobalDragMode() {
-        if (!this._globalDragModeEnabled) return;
         let t = L.PM.Utils.findLayers(this.map);
         (this._globalDragModeEnabled = !1),
           t.forEach((i) => {
@@ -15488,8 +15485,7 @@
           this._fireGlobalRemovalModeToggled(!0);
       },
       disableGlobalRemovalMode() {
-        this._globalRemovalModeEnabled &&
-          ((this._globalRemovalModeEnabled = !1),
+        (this._globalRemovalModeEnabled = !1),
           this.map.eachLayer((t) => {
             t.off('click', this.removeLayer, this);
           }),
@@ -15499,7 +15495,7 @@
             'removalMode',
             this.globalRemovalModeEnabled()
           ),
-          this._fireGlobalRemovalModeToggled(!1));
+          this._fireGlobalRemovalModeToggled(!1);
       },
       globalRemovalEnabled() {
         return this.globalRemovalModeEnabled();
@@ -15573,7 +15569,6 @@
           this._fireGlobalRotateModeToggled();
       },
       disableGlobalRotateMode() {
-        if (!this._globalRotateModeEnabled) return;
         (this._globalRotateModeEnabled = !1),
           L.PM.Utils.findLayers(this.map)
             .filter((i) => i instanceof L.Polyline)
@@ -15636,7 +15631,6 @@
           this._fireGlobalColorChangeModeToggled();
       },
       disableGlobalColorChangeMode() {
-        if (!this._globalChangeColorModeEnabled) return;
         (this._globalChangeColorModeEnabled = !1),
           L.PM.Utils.findLayers(this.map).forEach((i) => {
             i.pm.disableColorChange();
