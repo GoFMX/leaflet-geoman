@@ -18205,8 +18205,7 @@
         snapMiddle: !1,
         allowSelfIntersection: !0,
         tooltips: !0,
-        color: '#3388ff',
-        templineStyle: {},
+        templineStyle: { color: '#3388ff' },
         hintlineStyle: { color: '#3388ff', dashArray: '5,5' },
         pathOptions: null,
         cursorMarker: !0,
@@ -18896,6 +18895,7 @@
         (this._layerGroup = new L.FeatureGroup()),
         (this._layerGroup._pmTempLayer = !0),
         this._layerGroup.addTo(this._map),
+        console.log('this.options', this.options),
         (this._layer = L.polyline([], {
           ...this.options.templineStyle,
           pmIgnore: !1,
