@@ -18363,7 +18363,7 @@
       },
       rgbToHex(t) {
         let i = t.match(/\d+/g);
-        if (i.length !== 3) throw new Error('Invalid RGB color format');
+        if (!i || i.length !== 3) return this.options.defaultColor;
         let n = parseInt(i[0], 10).toString(16).padStart(2, '0'),
           o = parseInt(i[1], 10).toString(16).padStart(2, '0'),
           s = parseInt(i[2], 10).toString(16).padStart(2, '0');
@@ -19659,7 +19659,7 @@
       if (
         (L.Util.setOptions(this, {
           ...t,
-          color: i || this.globalOptions.defaultColor,
+          color: i || this.options.defaultColor,
         }),
         this.options.editable &&
           ((this.options.resizeableCircleMarker = this.options.editable),
@@ -22026,7 +22026,7 @@
       if (
         (L.Util.setOptions(this, {
           ...t,
-          color: i || this.globalOptions.defaultColor,
+          color: i || this.options.defaultColor,
         }),
         (this._map = this._layer._map),
         !!this._map)
@@ -22069,7 +22069,8 @@
         this._dragging)
       )
         return;
-      (this._enabled = !1),
+      (this._shape = this._layer.hasArrowheads() ? 'ArrowLine' : 'Line'),
+        (this._enabled = !1),
         this._markerGroup.clearLayers(),
         this._markerGroup.removeFrom(this._map),
         this._layer.off('remove', this.disable, this),
@@ -22322,12 +22323,12 @@
       });
     },
     _onArrowChange(t) {
-      this._fireArrowheadEditChangeEvent(this._layer._arrowheadOptions),
-        this._fireEdit(),
-        (this._layerEdited = !0),
+      (this._layerEdited = !0),
         this._layer.hasArrowheads()
           ? (this._shape = 'ArrowLine')
           : (this._shape = 'Line'),
+        this._fireArrowheadEditChangeEvent(this._layer._arrowheadOptions),
+        this._fireEdit(),
         this._fireMapResetView('Edit', { event: t });
     },
     _addMarker(t, i, n) {
@@ -22758,7 +22759,7 @@
       if (
         (L.Util.setOptions(this, {
           ...t,
-          color: i || this.globalOptions.defaultColor,
+          color: i || this.options.defaultColor,
         }),
         this.options.editable &&
           ((this.options.resizeableCircleMarker = this.options.editable),
