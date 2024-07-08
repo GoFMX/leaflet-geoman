@@ -20,9 +20,27 @@ Edit.Line = Edit.extend({
   initialize(layer) {
     this._layer = layer;
     this._enabled = false;
+
+    this._circleMarker = L.circleMarker([0, 0], {
+      radius: 5,
+      fillColor: 'white',
+      fillOpacity: 1,
+      className: 'pm-selectable',
+    });
+    this._proximityCursorMarker = L.marker([0, 0], {
+      zIndexOffset: 110,
+      icon: L.divIcon({ className: 'almost-over-marker pm-selectable' }),
+      pane: 'markerPane',
+    });
   },
   enable(options) {
-    L.Util.setOptions(this, options);
+    const hexColorValue = this.rgbToHex(
+      L.DomUtil.getStyle(this._layer.getElement(), 'stroke')
+    );
+    L.Util.setOptions(this, {
+      ...options,
+      color: hexColorValue || this.options.defaultColor,
+    });
 
     this._map = this._layer._map;
 
@@ -54,6 +72,12 @@ Edit.Line = Edit.extend({
     // if shape gets removed from map, disable edit mode
     this._layer.on('remove', this.disable, this);
 
+    if (this.options.editArrows) {
+      // Open arrow dialog if line is clicked
+      this._layer.on('click', this._onLineClick, this);
+      this._activateAlmostOver();
+    }
+
     if (!this.options.allowSelfIntersection) {
       this._layer.on(
         'pm:vertexremoved',
@@ -73,6 +97,7 @@ Edit.Line = Edit.extend({
     } else {
       this.cachedColor = undefined;
     }
+
     this._fireEnable();
   },
   disable() {
@@ -81,16 +106,30 @@ Edit.Line = Edit.extend({
       return;
     }
 
+    // Close the dialog if it is open
+    if (this._map.pm.Dialog.editArrowLineDialog) {
+      this._map.pm.Dialog.closeEditArrowLineDialog();
+    }
+
+    this._disableAlmostOver();
+    this._setLinesAsInactive();
+
     // prevent disabling if polygon is being dragged
     if (this._dragging) {
       return;
     }
+
+    this._shape = this._layer.hasArrowheads() ? 'ArrowLine' : this._shape;
     this._enabled = false;
     this._markerGroup.clearLayers();
     this._markerGroup.removeFrom(this._map);
 
-    // remove listener
+    // remove listeners
     this._layer.off('remove', this.disable, this);
+    this._layer.off('click', this._onLineClick, this);
+    this._map.pm.Dialog.disableAllEditArrowLineDialogEvents();
+
+    L.Util.setOptions(this, { editArrows: false });
 
     if (!this.options.allowSelfIntersection) {
       this._layer.off(
@@ -129,6 +168,84 @@ Edit.Line = Edit.extend({
     } else {
       this._disableSnapping();
     }
+  },
+  _activateAlmostOver() {
+    this._map.almostOver.addLayer(this._layer);
+
+    this._map.on('almost:over', (e) => {
+      this._map.addLayer(this._circleMarker);
+      this._map.addLayer(this._proximityCursorMarker);
+      L.DomUtil.removeClass(
+        this._circleMarker.getElement(),
+        'leaflet-pm-draggable'
+      );
+      L.DomUtil.removeClass(
+        this._proximityCursorMarker.getElement(),
+        'leaflet-pm-draggable'
+      );
+      e.layer.setStyle({ weight: 6 });
+      if (e.layer.hasArrowheads()) {
+        Object.values(e.layer.getArrowheads()._layers)?.forEach((l) =>
+          l.setStyle({ weight: 5 })
+        );
+      }
+      this._map.on('mousemove', this._syncProximityCursorMarker, this);
+    });
+
+    this._map.on('almost:move', (e) => {
+      this._circleMarker.setLatLng(e.latlng);
+    });
+
+    this._map.on('almost:out', (e) => {
+      this._map.removeLayer(this._circleMarker);
+      this._map.removeLayer(this._proximityCursorMarker);
+      e.layer.setStyle({ weight: 3 });
+      if (e.layer.hasArrowheads()) {
+        e.layer.setArrowStyle({ weight: 3 });
+      }
+    });
+
+    this._map.on('almost:click', (e) => {
+      e.layer.fire('click', this);
+    });
+  },
+  _disableAlmostOver() {
+    this._map.almostOver.removeLayer(this._layer);
+
+    this._map.off('mousemove', this._syncProximityCursorMarker);
+    this._map.off('almost:over');
+    this._map.off('almost:move');
+    this._map.off('almost:out');
+    this._map.off('almost:click');
+  },
+  _syncProximityCursorMarker(e) {
+    this._proximityCursorMarker.setLatLng(e.latlng);
+  },
+  _onArrowEnabledChangedListener(e) {
+    if (e.target.checked && !this._layer.hasArrowheads()) {
+      this._layer.arrowheads(this.options.defaultArrowheadOptions);
+    } else if (!e.target.checked && this._layer.hasArrowheads()) {
+      this._layer.deleteArrowheads();
+    }
+    this._map.pm.Dialog.toggleEditArrowLinePropVisibility(e.target.checked);
+    this._onArrowChange(e);
+  },
+  _onArrowFilledChangedListener(e) {
+    this._layer._arrowheadOptions.fill = e.target.checked;
+    this._onArrowChange(e);
+  },
+  _onArrowFrequencyChangedListener(e) {
+    this._layer._arrowheadOptions.frequency =
+      this._map.pm.Dialog._getEditArrowLineFrequency(e.target.value);
+    this._onArrowChange(e);
+  },
+  _onArrowAngleChangedListener(e) {
+    this._layer._arrowheadOptions.yawn = e.target.value;
+    this._onArrowChange(e);
+  },
+  _onArrowSizeChangedListener(e) {
+    this._layer._arrowheadOptions.size = `${e.target.value}px`;
+    this._onArrowChange(e);
   },
   _initMarkers() {
     const map = this._map;
@@ -282,6 +399,75 @@ Edit.Line = Edit.extend({
     setTimeout(() => {
       delete middleMarker._dragging;
     }, 100);
+  },
+  _onLineClick(e) {
+    if (!this._layer.hasArrowheads()) {
+      this._layer.arrowheads(this.options.defaultArrowheadOptions);
+      this._onArrowChange(e);
+    }
+    const dialogBody = this._map.pm.Dialog.getEditArrowLineDialogBody({
+      ...this._layer._arrowheadOptions,
+      showArrowToggle: true,
+    });
+
+    this._map.pm.Dialog.editArrowLineDialog.setContent(
+      this.options.dialogContent || dialogBody
+    );
+    this._map.pm.Dialog.editArrowLineDialog.open();
+
+    this._map.pm.Dialog.initEditArrowLineEnabledChangedListener(
+      this._onArrowEnabledChangedListener,
+      this
+    );
+    this._map.pm.Dialog.initEditArrowLineFilledChangedListener(
+      this._onArrowFilledChangedListener,
+      this
+    );
+    this._map.pm.Dialog.initEditArrowLineFrequencyChangedListener(
+      this._onArrowFrequencyChangedListener,
+      this
+    );
+    this._map.pm.Dialog.initEditArrowLineAngleChangedListener(
+      this._onArrowAngleChangedListener,
+      this
+    );
+    this._map.pm.Dialog.initEditArrowLineSizeChangedListener(
+      this._onArrowSizeChangedListener,
+      this
+    );
+
+    this._setLineAsActive();
+  },
+  _setLineAsActive() {
+    this._setLinesAsInactive();
+    this._active = true;
+    this._markerGroup.eachLayer((l) => {
+      const activeIcon = l.getIcon();
+      activeIcon.options.className += ' active-shape';
+      l.setIcon(activeIcon);
+    });
+  },
+  _setLinesAsInactive() {
+    const currentlyActive = this._map.pm.getActiveGeomanLayers();
+    currentlyActive.forEach((l) => {
+      l.pm._active = false;
+      l.pm._markerGroup.eachLayer((mg) => {
+        const activeIcon = mg.getIcon();
+        activeIcon.options.className = 'marker-icon';
+        mg.setIcon(activeIcon);
+      });
+    });
+  },
+  _onArrowChange(e) {
+    this._layerEdited = true;
+    if (this._layer.hasArrowheads()) {
+      this._shape = 'ArrowLine';
+    } else {
+      this._shape = 'Line';
+    }
+    this._fireArrowheadEditChangeEvent(this._layer._arrowheadOptions);
+    this._fireEdit();
+    this._fireMapResetView('Edit', { event: e });
   },
   // adds a new marker from a middlemarker
   _addMarker(newM, leftM, rightM) {

@@ -39,6 +39,57 @@ const Utils = {
 
     return layers;
   },
+  findLines(map) {
+    let layers = [];
+    map.eachLayer((layer) => {
+      if (layer instanceof L.Polyline) {
+        if (layer.pm.getShape().toLowerCase().includes('line')) {
+          layers.push(layer);
+        }
+      }
+    });
+
+    // filter out layers that don't have the leaflet-geoman instance
+    layers = layers.filter((layer) => !!layer.pm);
+
+    // filter out everything that's leaflet-geoman specific temporary stuff
+    layers = layers.filter((layer) => !layer._pmTempLayer);
+
+    // filter out everything that ignore leaflet-geoman
+    layers = layers.filter(
+      (layer) =>
+        (!L.PM.optIn && !layer.options.pmIgnore) || // if optIn is not set / true and pmIgnore is not set / true (default)
+        (L.PM.optIn && layer.options.pmIgnore === false) // if optIn is true and pmIgnore is false);
+    );
+
+    return layers;
+  },
+  reverseNumber(min, max, num) {
+    return max + min - num;
+  },
+  findMarkers(map) {
+    let layers = [];
+    map.eachLayer((layer) => {
+      if (layer instanceof L.Marker) {
+        layers.push(layer);
+      }
+    });
+
+    // filter out layers that don't have the leaflet-geoman instance
+    layers = layers.filter((layer) => !!layer.pm);
+
+    // filter out everything that's leaflet-geoman specific temporary stuff
+    layers = layers.filter((layer) => !layer._pmTempLayer);
+
+    // filter out everything that ignore leaflet-geoman
+    layers = layers.filter(
+      (layer) =>
+        (!L.PM.optIn && !layer.options.pmIgnore) || // if optIn is not set / true and pmIgnore is not set / true (default)
+        (L.PM.optIn && layer.options.pmIgnore === false) // if optIn is true and pmIgnore is false);
+    );
+
+    return layers;
+  },
   circleToPolygon(circle, sides = 60, withBearing = true) {
     const origin = circle.getLatLng();
     const radius = circle.getRadius();
@@ -144,6 +195,23 @@ const Utils = {
     }
 
     return returnVal;
+  },
+  rgbToHex(rgb) {
+    // Extract the RGB values using a regular expression
+    const result = rgb.match(/\d+/g);
+
+    // Ensure that the input is valid
+    if (!result || result.length !== 3) {
+      return this.options.defaultColor;
+    }
+
+    // Convert each RGB component to its HEX value
+    const r = parseInt(result[0], 10).toString(16).padStart(2, '0');
+    const g = parseInt(result[1], 10).toString(16).padStart(2, '0');
+    const b = parseInt(result[2], 10).toString(16).padStart(2, '0');
+
+    // Combine the HEX values and return the result
+    return `#${r}${g}${b}`;
   },
   findDeepMarkerIndex(arr, marker) {
     // thanks for the function, Felix Heck

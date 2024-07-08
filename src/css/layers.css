@@ -1,5 +1,4 @@
-.marker-icon,
-.marker-icon:focus {
+.marker-icon {
   background-color: #ffffff;
   border: 1px solid #3388ff;
   border-radius: 50%;
@@ -10,8 +9,18 @@
   transition: opacity ease 0.3s;
 }
 
-.marker-icon-middle,
-.marker-icon-middle:focus {
+.active-shape.marker-icon {
+  background-color: #c59e9e7b;
+  border: 2px solid #a92929;
+  border-radius: 50%;
+  margin: -8px 0 0 -8px !important;
+  width: 14px !important;
+  height: 14px !important;
+  outline: 0;
+  transition: opacity ease 0.3s;
+}
+
+.marker-icon-middle {
   opacity: 0.7;
   margin: -6px 0 0 -6px !important;
   width: 10px !important;
@@ -19,6 +28,10 @@
 }
 
 .leaflet-pm-draggable {
+  cursor: move !important;
+}
+
+.leaflet-pm-color-changeable {
   cursor: move !important;
 }
 
@@ -59,13 +72,11 @@
   background-color: #fff;
   color: #000;
   resize: none;
-  border: none;
+  border: 1px solid black;
   outline: 0;
   cursor: pointer;
   border-radius: 3px;
-  padding-left: 7px;
-  padding-bottom: 0;
-  padding-top: 4px;
+  padding: 4px 7px;
 }
 
 .leaflet-pm-draggable .pm-textarea {
@@ -87,4 +98,22 @@
 
 .pm-textarea.pm-hasfocus {
   cursor: auto;
+}
+
+.pm-selectable {
+  cursor: pointer !important;
+}
+
+.almost-over-marker,
+.almost-over-marker:focus {
+  background-color: #ffffff;
+  border: 1px solid #ffffff;
+  border-radius: 50%;
+  margin: -8px 0 0 -8px !important;
+  width: 14px !important;
+  height: 14px !important;
+  outline: 0;
+  transition: opacity ease 0.3s;
+  cursor: pointer;
+  opacity: 0;
 }

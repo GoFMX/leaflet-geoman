@@ -23,7 +23,7 @@ const buildOptions = {
     '.svg': 'dataurl' },
   minify: true,
   outfile: './dist/leaflet-geoman.js',
-  sourcemap: process.env.DEV ? true : false,
+  sourcemap: true,
 }
 
 const ctx = await esbuild.context({ ...buildOptions, plugins });
@@ -47,6 +47,11 @@ if (process.env.DEV) {
   
   // Dispose context
   ctx.dispose();
+
+  // Replace incorrect closing tag in <\/style>
+  const data = fs.readFileSync('./dist/leaflet-geoman.css', 'utf8');
+  const result = data.replace(/<\\\/style>/g, '</style>');
+  fs.writeFileSync('./dist/leaflet-geoman.css', result, 'utf8');
 
   // Copy types
   fs.copyFileSync('leaflet-geoman.d.ts', './dist/leaflet-geoman.d.ts');

@@ -1,8 +1,10 @@
+import head from 'lodash/head';
 import { getTranslation } from '../helpers';
 import EventMixin from '../Mixins/Events';
+import ColorChangeMixin from '../Mixins/ColorChangeDialog';
 
 const PMButton = L.Control.extend({
-  includes: [EventMixin],
+  includes: [EventMixin, ColorChangeMixin],
   options: {
     position: 'topleft',
     disableByOtherButtons: true,
@@ -126,24 +128,48 @@ const PMButton = L.Control.extend({
         onClick() {
           this._triggerClick();
         },
+        title: getTranslation('actions.cancel'),
       },
       finishMode: {
         text: getTranslation('actions.finish'),
         onClick() {
           this._triggerClick();
         },
+        title: getTranslation('actions.finish'),
       },
       removeLastVertex: {
         text: getTranslation('actions.removeLastVertex'),
         onClick() {
           this._map.pm.Draw[button.jsClass]._removeLastVertex();
         },
+        title: getTranslation('actions.removeLastVertex'),
       },
       finish: {
         text: getTranslation('actions.finish'),
         onClick(e) {
           this._map.pm.Draw[button.jsClass]._finishShape(e);
         },
+        title: getTranslation('actions.finish'),
+      },
+      changeColor: {
+        text: `
+          <span class="color-control-background" style="border-radius: 3px; background-color: ${this._map.pm.getGlobalOptions().activeColor}">
+            &nbsp;&nbsp;&nbsp;&nbsp;
+          </span>`,
+        onClick() {
+          this._map.pm.Dialog.toggleColorChangeDialog();
+          this._map.pm.Dialog.colorChangeDialog.showClose();
+        },
+        title: getTranslation('actions.changeColor'),
+        events: [
+          {
+            eventName: 'pm:colorchanged',
+            callback: (event, action) => {
+              const colorIcon = head(action.children);
+              colorIcon.style.backgroundColor = event.activeColor;
+            },
+          },
+        ],
       },
     };
 
@@ -164,12 +190,27 @@ const PMButton = L.Control.extend({
       );
       actionNode.setAttribute('role', 'button');
       actionNode.setAttribute('tabindex', '0');
+      if (action.title) actionNode.setAttribute('title', action.title);
+
       actionNode.href = '#';
 
       actionNode.innerHTML = action.text;
 
+      // Action Events
       L.DomEvent.disableClickPropagation(actionNode);
       L.DomEvent.on(actionNode, 'click', L.DomEvent.stop);
+
+      if (action.events) {
+        action.events?.forEach((eventObject) => {
+          this._map.on(
+            eventObject.eventName,
+            (e) => {
+              eventObject.callback(e, actionNode);
+            },
+            action
+          );
+        });
+      }
 
       if (!button.disabled) {
         if (action.onClick) {

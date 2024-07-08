@@ -9,15 +9,18 @@ const Toolbar = L.Class.extend({
     drawMarker: true,
     drawRectangle: true,
     drawPolyline: true,
+    drawArrowLine: true,
     drawPolygon: true,
     drawCircle: true,
     drawCircleMarker: true,
     drawText: true,
     editMode: true,
+    arrowEditMode: true,
     dragMode: true,
     cutPolygon: true,
     removalMode: true,
     rotateMode: true,
+    colorChangeMode: true,
     snappingOption: true,
     drawControls: true,
     editControls: true,
@@ -111,11 +114,14 @@ const Toolbar = L.Class.extend({
       geomanIcons: {
         drawMarker: 'control-icon leaflet-pm-icon-marker',
         drawPolyline: 'control-icon leaflet-pm-icon-polyline',
+        drawArrowLine: 'control-icon leaflet-pm-icon-arrowline',
         drawRectangle: 'control-icon leaflet-pm-icon-rectangle',
         drawPolygon: 'control-icon leaflet-pm-icon-polygon',
         drawCircle: 'control-icon leaflet-pm-icon-circle',
         drawCircleMarker: 'control-icon leaflet-pm-icon-circle-marker',
         editMode: 'control-icon leaflet-pm-icon-edit',
+        arrowEditMode: 'control-icon leaflet-pm-icon-arrowline-edit',
+        colorChangeMode: 'control-icon leaflet-pm-icon-change-color',
         dragMode: 'control-icon leaflet-pm-icon-drag',
         cutPolygon: 'control-icon leaflet-pm-icon-cut',
         removalMode: 'control-icon leaflet-pm-icon-delete',
@@ -228,7 +234,7 @@ const Toolbar = L.Class.extend({
       toggleStatus: false,
       disableOtherButtons: true,
       position: this.options.position,
-      actions: ['finish', 'removeLastVertex', 'cancel'],
+      actions: ['finish', 'removeLastVertex', 'cancel', 'changeColor'],
     };
 
     const drawLineButton = {
@@ -244,7 +250,23 @@ const Toolbar = L.Class.extend({
       toggleStatus: false,
       disableOtherButtons: true,
       position: this.options.position,
-      actions: ['finish', 'removeLastVertex', 'cancel'],
+      actions: ['finish', 'removeLastVertex', 'cancel', 'changeColor'],
+    };
+
+    const drawArrowLineButton = {
+      className: 'control-icon leaflet-pm-icon-arrowline',
+      title: getTranslation('buttonTitles.drawArrowLineButton'),
+      jsClass: 'ArrowLine',
+      onClick: () => {},
+      afterClick: (e, ctx) => {
+        // toggle drawing mode
+        this.map.pm.Draw[ctx.button._button.jsClass].toggle();
+      },
+      doToggle: true,
+      toggleStatus: false,
+      disableOtherButtons: true,
+      position: this.options.position,
+      actions: ['finish', 'removeLastVertex', 'cancel', 'changeColor'],
     };
 
     const drawCircleButton = {
@@ -260,7 +282,7 @@ const Toolbar = L.Class.extend({
       toggleStatus: false,
       disableOtherButtons: true,
       position: this.options.position,
-      actions: ['cancel'],
+      actions: ['cancel', 'changeColor'],
     };
 
     const drawCircleMarkerButton = {
@@ -276,7 +298,7 @@ const Toolbar = L.Class.extend({
       toggleStatus: false,
       disableOtherButtons: true,
       position: this.options.position,
-      actions: ['cancel'],
+      actions: ['cancel', 'changeColor'],
     };
 
     const drawRectButton = {
@@ -292,7 +314,7 @@ const Toolbar = L.Class.extend({
       toggleStatus: false,
       disableOtherButtons: true,
       position: this.options.position,
-      actions: ['cancel'],
+      actions: ['cancel', 'changeColor'],
     };
 
     const editButton = {
@@ -301,6 +323,36 @@ const Toolbar = L.Class.extend({
       onClick: () => {},
       afterClick: () => {
         this.map.pm.toggleGlobalEditMode();
+      },
+      doToggle: true,
+      toggleStatus: false,
+      disableOtherButtons: true,
+      position: this.options.position,
+      tool: 'edit',
+      actions: ['finishMode'],
+    };
+
+    const editArrowLineButton = {
+      className: 'control-icon leaflet-pm-icon-arrowline-edit',
+      title: getTranslation('buttonTitles.editArrowLineButton'),
+      onClick: () => {},
+      afterClick: () => {
+        this.map.pm.toggleGlobalArrowEditMode();
+      },
+      doToggle: true,
+      toggleStatus: false,
+      disableOtherButtons: true,
+      position: this.options.position,
+      tool: 'edit',
+      actions: ['finishMode'],
+    };
+
+    const changeColorButton = {
+      className: 'control-icon leaflet-pm-icon-change-color',
+      title: getTranslation('buttonTitles.changeColorButton'),
+      onClick: () => {},
+      afterClick: () => {
+        this.map.pm.toggleGlobalColorChangeMode();
       },
       doToggle: true,
       toggleStatus: false,
@@ -394,6 +446,10 @@ const Toolbar = L.Class.extend({
 
     this._addButton('drawMarker', new L.Control.PMButton(drawMarkerButton));
     this._addButton('drawPolyline', new L.Control.PMButton(drawLineButton));
+    this._addButton(
+      'drawArrowLine',
+      new L.Control.PMButton(drawArrowLineButton)
+    );
     this._addButton('drawRectangle', new L.Control.PMButton(drawRectButton));
     this._addButton('drawPolygon', new L.Control.PMButton(drawPolyButton));
     this._addButton('drawCircle', new L.Control.PMButton(drawCircleButton));
@@ -403,6 +459,14 @@ const Toolbar = L.Class.extend({
     );
     this._addButton('drawText', new L.Control.PMButton(drawTextButton));
     this._addButton('editMode', new L.Control.PMButton(editButton));
+    this._addButton(
+      'arrowEditMode',
+      new L.Control.PMButton(editArrowLineButton)
+    );
+    this._addButton(
+      'colorChangeMode',
+      new L.Control.PMButton(changeColorButton)
+    );
     this._addButton('dragMode', new L.Control.PMButton(dragButton));
     this._addButton('cutPolygon', new L.Control.PMButton(cutButton));
     this._addButton('removalMode', new L.Control.PMButton(deleteButton));
@@ -688,9 +752,12 @@ const Toolbar = L.Class.extend({
       Polygon: 'drawPolygon',
       Rectangle: 'drawRectangle',
       Polyline: 'drawPolyline',
+      ArrowLine: 'drawArrowLine',
       Line: 'drawPolyline',
       CircleMarker: 'drawCircleMarker',
       Edit: 'editMode',
+      EditArrowLine: 'arrowEditMode',
+      ColorChange: 'colorChangeMode',
       Drag: 'dragMode',
       Cut: 'cutPolygon',
       Removal: 'removalMode',

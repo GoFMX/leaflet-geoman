@@ -1,16 +1,20 @@
 import merge from 'lodash/merge';
 import SnapMixin from '../Mixins/Snapping';
 import EventMixin from '../Mixins/Events';
+import DialogMixin from '../Mixins/DrawArrowDialog';
+import Utils from '../L.PM.Utils';
 
 const Draw = L.Class.extend({
-  includes: [SnapMixin, EventMixin],
+  includes: [SnapMixin, EventMixin, DialogMixin, Utils],
   options: {
     snappable: true, // TODO: next major Release, rename it to allowSnapping
     snapDistance: 20,
     snapMiddle: false,
     allowSelfIntersection: true,
     tooltips: true,
-    templineStyle: {},
+    templineStyle: {
+      color: '#3388ff',
+    },
     hintlineStyle: {
       color: '#3388ff',
       dashArray: '5,5',
@@ -22,6 +26,7 @@ const Draw = L.Class.extend({
       draggable: true,
       icon: L.icon(),
     },
+    editArrows: false,
     hideMiddleMarkers: false,
     minRadiusCircle: null,
     maxRadiusCircle: null,
@@ -58,6 +63,7 @@ const Draw = L.Class.extend({
       'Marker',
       'CircleMarker',
       'Line',
+      'ArrowLine',
       'Polygon',
       'Rectangle',
       'Circle',
@@ -191,14 +197,17 @@ const Draw = L.Class.extend({
       drawMarker: 'Marker',
       drawCircle: 'Circle',
       drawPolygon: 'Polygon',
+      drawArrowLine: 'ArrowLine',
       drawPolyline: 'Line',
       drawRectangle: 'Rectangle',
       drawCircleMarker: 'CircleMarker',
       editMode: 'Edit',
+      editArrowLine: 'Edit Arrows',
       dragMode: 'Drag',
       cutPolygon: 'Cut',
       removalMode: 'Removal',
       rotateMode: 'Rotate',
+      colorChangeMode: 'Color',
       drawText: 'Text',
     };
 
@@ -211,6 +220,7 @@ const Draw = L.Class.extend({
     if (layer.pm) {
       // add the pm options from drawing to the new layer (edit)
       layer.pm.setOptions(this.options);
+      layer.options.color = this.options.activeColor;
       // set the shape (can be a custom shape)
       layer.pm._shape = this._shape;
       // apply the map to the new created layer in the pm object

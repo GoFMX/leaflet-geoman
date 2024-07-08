@@ -1,28 +1,45 @@
 import merge from 'lodash/merge';
 import translations from '../assets/translations';
 import GlobalEditMode from './Mixins/Modes/Mode.Edit';
+import GlobalArrowEditMode from './Mixins/Modes/Mode.EditArrows';
 import GlobalDragMode from './Mixins/Modes/Mode.Drag';
 import GlobalRemovalMode from './Mixins/Modes/Mode.Removal';
 import GlobalRotateMode from './Mixins/Modes/Mode.Rotate';
+import GlobalColorChangeMode from './Mixins/Modes/Mode.Color';
 import EventMixin from './Mixins/Events';
+import ArrowDialogMixin from './Mixins/DrawArrowDialog';
+import EditArrowDialogMixin from './Mixins/EditArrowDialog';
+import ColorChangeDialogMixin from './Mixins/ColorChangeDialog';
 import createKeyboardMixins from './Mixins/Keyboard';
 import { getRenderer } from './helpers';
 
 const Map = L.Class.extend({
   includes: [
     GlobalEditMode,
+    GlobalArrowEditMode,
     GlobalDragMode,
     GlobalRemovalMode,
     GlobalRotateMode,
+    GlobalColorChangeMode,
     EventMixin,
+    ColorChangeDialogMixin,
+    ArrowDialogMixin,
+    EditArrowDialogMixin,
   ],
   initialize(map) {
     this.map = map;
     this.Draw = new L.PM.Draw(map);
     this.Toolbar = new L.PM.Toolbar(map);
     this.Keyboard = createKeyboardMixins();
+    this.Dialog = {
+      ...ArrowDialogMixin,
+      ...ColorChangeDialogMixin,
+      ...EditArrowDialogMixin,
+    };
 
     this.globalOptions = {
+      defaultColor: '#3388ff',
+      activeColor: '#3388ff',
       snappable: true,
       layerGroup: undefined,
       snappingOrder: [
@@ -30,6 +47,7 @@ const Map = L.Class.extend({
         'CircleMarker',
         'Circle',
         'Line',
+        'ArrowLine',
         'Polygon',
         'Rectangle',
       ],
@@ -42,6 +60,27 @@ const Map = L.Class.extend({
     };
 
     this.Keyboard._initKeyListener(map);
+
+    // Set Up Dialogs
+    // Color Change Dialog
+    this.Dialog.colorChangeDialog = this.colorChangeDialogInit({
+      close: false,
+    }).addTo(this.map);
+    this.Dialog.colorChangeInit(this.map, {});
+
+    // Draw Arrow Line Dialog
+    this.Dialog.drawArrowLineDialog = this.drawArrowLineDialogInit({
+      close: false,
+      showArrowToggle: false,
+    }).addTo(this.map);
+
+    // Edit Arrow Line Dialog
+    this.Dialog.editArrowLineDialog = this.editArrowLineDialogInit().addTo(
+      this.map
+    );
+
+    // Dialog Events
+    this._addDialogEvents();
   },
   // eslint-disable-next-line default-param-last
   setLang(lang = 'en', t, fallback = 'en') {
@@ -59,6 +98,15 @@ const Map = L.Class.extend({
   },
   removeControls() {
     this.Toolbar.removeControls();
+  },
+  disableAllModes() {
+    this.disableGlobalCutMode();
+    this.disableGlobalEditMode();
+    this.disableGlobalDragMode();
+    this.disableGlobalRotateMode();
+    this.disableGlobalRemovalMode();
+    this.disableGlobalArrowEditMode();
+    this.disableGlobalColorChangeMode();
   },
   toggleControls() {
     this.Toolbar.toggleControls();
@@ -94,9 +142,18 @@ const Map = L.Class.extend({
       }
     });
   },
-
+  getActiveColor() {
+    return this.globalOptions.activeColor;
+  },
   getGlobalOptions() {
     return this.globalOptions;
+  },
+  setGlobalStyle(options) {
+    this.setGlobalOptions(options);
+    this.setPathOptions(options.pathOptions, {
+      ignoreShapes: ['Text'],
+      merge: true,
+    });
   },
   setGlobalOptions(o) {
     // merge passed and existing options
@@ -191,6 +248,14 @@ const Map = L.Class.extend({
     });
     return group;
   },
+  getActiveGeomanLayers(shapeType) {
+    return this.getGeomanLayers().filter((l) => {
+      if (shapeType) {
+        return l.getShape() === shapeType && l.pm._active;
+      }
+      return l.pm._active;
+    });
+  },
   getGeomanDrawLayers(asGroup = false) {
     const layers = L.PM.Utils.findLayers(this.map).filter(
       (l) => l._drawnByGeoman === true
@@ -204,6 +269,26 @@ const Map = L.Class.extend({
       group.addLayer(layer);
     });
     return group;
+  },
+  _addDialogEvents() {
+    this.map.on('pm:drawend', () => {
+      this.Dialog.closeColorChangeDialog();
+      this.Dialog.closeDrawArrowLineDialog();
+      this.Dialog.closeEditArrowLineDialog();
+    });
+
+    this.map.on('dialog:moveend', this.updateColorisPosition);
+
+    this.map.on('dialog:closed', () => {
+      const currentlyActive = this.getActiveGeomanLayers();
+      currentlyActive.forEach((l) => {
+        l.pm._markerGroup.eachLayer((mg) => {
+          const activeIcon = mg.getIcon();
+          activeIcon.options.className = 'marker-icon';
+          mg.setIcon(activeIcon);
+        });
+      });
+    });
   },
   // returns the map instance by default or a layergroup is set through global options
   _getContainingLayer() {

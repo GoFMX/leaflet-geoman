@@ -60,7 +60,7 @@ const EventMixin = {
       customPayload
     );
   },
-  // Fired when layer is cutted
+  // Fired when layer is cut
   // TODO: is Cut "Draw" or "Edit"? The event `pm:edit` in the same scope is called as source "Edit"
   _fireCut(
     fireLayer,
@@ -603,6 +603,23 @@ const EventMixin = {
       customPayload
     );
   },
+  // Fired when Edit Mode is toggled.
+  _fireGlobalArrowEditModeToggled(
+    enabled,
+    source = 'Global',
+    customPayload = {}
+  ) {
+    this.__fire(
+      this.map,
+      'pm:globalarroweditmodetoggled',
+      {
+        enabled,
+        map: this.map,
+      },
+      source,
+      customPayload
+    );
+  },
   // Fired when Removal Mode is toggled.
   _fireGlobalRemovalModeToggled(
     enabled,
@@ -660,6 +677,67 @@ const EventMixin = {
       customPayload
     );
   },
+
+  // Color Change Events
+  // Fired when color change is enabled
+  _fireColorChangeEnable(
+    fireLayer,
+    source = 'ColorChange',
+    customPayload = {}
+  ) {
+    this.__fire(
+      fireLayer,
+      'pm:colorchangeenable',
+      {
+        layer: this._layer,
+        shape: this.getShape(),
+      },
+      source,
+      customPayload
+    );
+  },
+  // Fired when color change is disabled
+  _fireColorChangeDisable(
+    fireLayer,
+    source = 'ColorChange',
+    customPayload = {}
+  ) {
+    this.__fire(
+      fireLayer,
+      'pm:colorchangedisable',
+      {
+        layer: this._layer,
+        shape: this.getShape(),
+      },
+      source,
+      customPayload
+    );
+  },
+  // Fired when Color Change Mode is toggled.
+  _fireGlobalColorChangeModeToggled(source = 'Global', customPayload = {}) {
+    this.__fire(
+      this.map,
+      'pm:globalcolorchangemodetoggled',
+      {
+        enabled: this.globalColorChangeModeEnabled(),
+        map: this.map,
+      },
+      source,
+      customPayload
+    );
+  },
+  // Fired when the color is changed
+  _fireColorChanged(activeColor, source = 'Draw', customPayload = {}) {
+    this.__fire(
+      this.map,
+      'pm:colorchanged',
+      {
+        activeColor,
+      },
+      source,
+      customPayload
+    );
+  },
   // Fired when LayerGroup is removed
   _fireRemoveLayerGroup(
     fireLayer,
@@ -690,6 +768,55 @@ const EventMixin = {
         event,
         eventType,
         focusOn,
+      },
+      source,
+      customPayload
+    );
+  },
+  // Fired when arrowhead property is changed during drawing
+  _fireArrowheadDrawChangeEvent(
+    arrowheadOptions,
+    source = 'Draw',
+    customPayload = {}
+  ) {
+    this.__fire(
+      this._layer,
+      'pm:arrowdrawchange',
+      {
+        layer: this._layer,
+        arrowheadOptions,
+        shape: this.getShape(),
+      },
+      source,
+      customPayload
+    );
+  },
+  // Fired when arrowhead property is changed during editing
+  // The custom payload is simply expanded into the event object
+  _fireArrowheadEditChangeEvent(
+    arrowheadOptions,
+    source = 'Edit',
+    customPayload = {}
+  ) {
+    this.__fire(
+      this._layer,
+      'pm:arroweditchange',
+      {
+        layer: this._layer,
+        arrowheadOptions,
+        shape: this.getShape(),
+      },
+      source,
+      customPayload
+    );
+  },
+  _fireMapResetView(source = 'Edit', customPayload = {}) {
+    this.__fire(
+      this._map,
+      'viewreset',
+      {
+        layer: this._layer,
+        shape: this.getShape(),
       },
       source,
       customPayload

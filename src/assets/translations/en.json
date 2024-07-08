@@ -14,15 +14,18 @@
   "actions": {
     "finish": "Finish",
     "cancel": "Cancel",
-    "removeLastVertex": "Remove Last Vertex"
+    "removeLastVertex": "Remove Last Vertex",
+    "changeColor": "Change Colors"
   },
   "buttonTitles": {
     "drawMarkerButton": "Draw Marker",
     "drawPolyButton": "Draw Polygons",
     "drawLineButton": "Draw Polyline",
+    "drawArrowLineButton": "Draw Polyline With Arrows",
     "drawCircleButton": "Draw Circle",
     "drawRectButton": "Draw Rectangle",
     "editButton": "Edit Layers",
+    "editArrowLineButton": "Edit Arrow Lines",
     "dragButton": "Drag Layers",
     "cutButton": "Cut Layers",
     "deleteButton": "Remove Layers",
@@ -30,6 +33,7 @@
     "snappingButton": "Snap dragged marker to other layers and vertices",
     "pinningButton": "Pin shared vertices together",
     "rotateButton": "Rotate Layers",
+    "changeColorButton": "Change Colors",
     "drawTextButton": "Draw Text",
     "scaleButton": "Scale Layers",
     "autoTracingButton": "Auto trace Line"

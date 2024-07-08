@@ -62,6 +62,15 @@
 .leaflet-pm-toolbar .leaflet-pm-icon-polyline {
   background-image: url('../assets/icons/Line.svg');
 }
+.leaflet-pm-toolbar .leaflet-pm-icon-arrowline {
+  background-image: url('../assets/icons/ArrowLine.svg');
+}
+.leaflet-pm-toolbar .leaflet-pm-icon-arrowline-edit {
+  background-image: url('../assets/icons/ArrowLineEdit.svg');
+}
+.leaflet-pm-toolbar .leaflet-pm-icon-change-color {
+  background-image: url('../assets/icons/Color.svg');
+}
 .leaflet-pm-toolbar .leaflet-pm-icon-circle {
   background-image: url('../assets/icons/Circle.svg');
 }
@@ -188,4 +197,10 @@
 
 .leaflet-buttons-control-button.pm-disabled > .control-icon {
   filter: opacity(0.6);
+}
+
+.leaflet-pm-changecolor {
+  cursor:
+    url('../assets/icons/ColorPointer.svg') 5 5,
+    pointer !important;
 }

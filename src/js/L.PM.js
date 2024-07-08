@@ -8,6 +8,12 @@
  * Get Pro: https://geoman.io
  */
 
+import './Libraries/GeometryUtil';
+import './Libraries/Arrowheads';
+import './Libraries/Dialog';
+import './Libraries/Coloris';
+import './Libraries/AlmostOver';
+
 import './polyfills';
 import packageInfo from '../../package.json';
 
@@ -17,6 +23,7 @@ import Toolbar from './Toolbar/L.PM.Toolbar';
 import Draw from './Draw/L.PM.Draw';
 import './Draw/L.PM.Draw.Marker';
 import './Draw/L.PM.Draw.Line';
+import './Draw/L.PM.Draw.ArrowLine';
 import './Draw/L.PM.Draw.Polygon';
 import './Draw/L.PM.Draw.Rectangle';
 import './Draw/L.PM.Draw.CircleMarker';
@@ -37,6 +44,8 @@ import './Edit/L.PM.Edit.Text';
 
 import '../css/layers.css';
 import '../css/controls.css';
+import '../css/dialog.css';
+import '../css/coloris.css';
 
 import Matrix from './helpers/Matrix';
 
@@ -130,6 +139,7 @@ L.PM = L.PM || {
         this.pm = new L.PM.Edit.CircleMarker(this);
       }
     }
+
     L.CircleMarker.addInitHook(initCircleMarker);
 
     function initPolyline() {

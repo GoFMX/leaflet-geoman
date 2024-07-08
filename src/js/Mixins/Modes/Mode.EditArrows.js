@@ -1,20 +1,34 @@
 // this mixin adds a global edit mode to the map
-const GlobalEditMode = {
-  _globalEditModeEnabled: false,
-  enableGlobalEditMode(o) {
-    const options = {
-      hideMiddleMarkers: false,
-      ...o,
+const GlobalArrowEditMode = {
+  _globalArrowEditModeEnabled: false,
+  enableGlobalArrowEditMode(o) {
+    this._arrowheadOptions = {
+      fill: true,
+      frequency: 'endonly',
+      yawn: 30,
+      size: '25px',
+      weight: 3,
+      showArrowToggle: true,
     };
     // set status
-    this._globalEditModeEnabled = true;
-    this._globalArrowEditModeEnabled = false;
+    this._globalArrowEditModeEnabled = true;
+
+    // Set layer options
+    const options = {
+      hideMiddleMarkers: true,
+      editArrows: this.globalArrowEditModeEnabled(),
+      defaultArrowheadOptions: this._arrowheadOptions,
+      ...o,
+    };
 
     // Set toolbar button to correct status
-    this.Toolbar.toggleButton('editMode', this.globalEditModeEnabled());
+    this.Toolbar.toggleButton(
+      'arrowEditMode',
+      this.globalArrowEditModeEnabled()
+    );
 
     // find all layers handled by leaflet-geoman
-    const layers = L.PM.Utils.findLayers(this.map);
+    const layers = L.PM.Utils.findLines(this.map);
 
     // enable all layers
     layers.forEach((layer) => {
@@ -25,7 +39,7 @@ const GlobalEditMode = {
 
     if (!this.throttledReInitEdit) {
       this.throttledReInitEdit = L.Util.throttle(
-        this.handleLayerAdditionInGlobalEditMode,
+        this.handleLayerAdditionInGlobalArrowEditMode,
         100,
         this
       );
@@ -38,14 +52,14 @@ const GlobalEditMode = {
     this.map.on('layeradd', this.throttledReInitEdit, this);
 
     // fire event
-    this._fireGlobalEditModeToggled(true);
+    this._fireGlobalArrowEditModeToggled(true);
   },
-  disableGlobalEditMode() {
+  disableGlobalArrowEditMode() {
     // set status
-    this._globalEditModeEnabled = false;
+    this._globalArrowEditModeEnabled = false;
 
     // find all layers handles by leaflet-geoman
-    const layers = L.PM.Utils.findLayers(this.map);
+    const layers = L.PM.Utils.findLines(this.map);
 
     // disable all layers
     layers.forEach((layer) => {
@@ -56,37 +70,35 @@ const GlobalEditMode = {
     this.map.off('layeradd', this._layerAddedEdit, this);
     this.map.off('layeradd', this.throttledReInitEdit, this);
 
-    // Set toolbar button to currect status
-    this.Toolbar.toggleButton('editMode', this.globalEditModeEnabled());
+    // Set toolbar button to correct status
+    this.Toolbar.toggleButton(
+      'arrowEditMode',
+      this.globalArrowEditModeEnabled()
+    );
 
     // fire event
-    this._fireGlobalEditModeToggled(false);
+    this._fireGlobalArrowEditModeToggled(false);
   },
-  // TODO: Remove in the next major release
-  globalEditEnabled() {
-    return this.globalEditModeEnabled();
-  },
-  globalEditModeEnabled() {
-    return this._globalEditModeEnabled;
+  globalArrowEditModeEnabled() {
+    return this._globalArrowEditModeEnabled;
   },
   // TODO: this should maybe removed, it will overwrite explicit options on the layers
-  toggleGlobalEditMode(options = this.globalOptions) {
-    if (this.globalEditModeEnabled()) {
+  toggleGlobalArrowEditMode(options = this.globalOptions) {
+    if (this.globalArrowEditModeEnabled()) {
       // disable
-      this.disableGlobalEditMode();
+      this.disableGlobalArrowEditMode();
     } else {
       // enable
-      this.enableGlobalEditMode(options);
+      this.enableGlobalArrowEditMode(options);
     }
   },
-  handleLayerAdditionInGlobalEditMode() {
+  handleLayerAdditionInGlobalArrowEditMode() {
     const layers = this._addedLayersEdit;
     this._addedLayersEdit = {};
-    if (this.globalEditModeEnabled()) {
+    if (this.globalArrowEditModeEnabled()) {
       for (const id in layers) {
         const layer = layers[id];
-        // when global edit mode is enabled and a layer is added to the map,
-        // enable edit for that layer if it's relevant
+        // when global edit mode is enabled and a layer is added to the map, enable edit for that layer if it's relevant
 
         if (this._isRelevantForEdit(layer)) {
           layer.pm.enable({ ...this.globalOptions });
@@ -109,4 +121,4 @@ const GlobalEditMode = {
   },
 };
 
-export default GlobalEditMode;
+export default GlobalArrowEditMode;
