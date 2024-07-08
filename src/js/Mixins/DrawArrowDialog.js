@@ -1,7 +1,7 @@
 const DrawArrowLineDialogMixins = {
   drawArrowLineDialogInit(options = {}) {
     const dialogOptions = {
-      size: [200, 240],
+      size: [200, 260],
       anchor: [0, -210],
       position: 'topright',
       showArrowToggle: true,

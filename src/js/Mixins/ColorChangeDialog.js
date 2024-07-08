@@ -12,7 +12,7 @@ const ColorChangeMixin = {
   openColorChangeDialog() {
     this.colorChangeDialog?.open();
     if (this.drawArrowLineDialog?.isOpen()) {
-      this.colorChangeDialog.setLocation([260, -210]);
+      this.colorChangeDialog.setLocation([270, -210]);
     } else {
       this.colorChangeDialog.setLocation([0, -210]);
     }
@@ -27,7 +27,7 @@ const ColorChangeMixin = {
     } else {
       this.colorChangeDialog?.open();
       if (this.drawArrowLineDialog?.isOpen()) {
-        this.colorChangeDialog.setLocation([260, -210]);
+        this.colorChangeDialog.setLocation([270, -210]);
       } else {
         this.colorChangeDialog.setLocation([0, -210]);
       }

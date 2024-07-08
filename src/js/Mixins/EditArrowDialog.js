@@ -1,7 +1,7 @@
 const EditArrowLineDialogMixins = {
   editArrowLineDialogInit(options = {}) {
     const dialogOptions = {
-      size: [200, 250],
+      size: [200, 270],
       anchor: [0, -210],
       position: 'topright',
       showArrowToggle: true,

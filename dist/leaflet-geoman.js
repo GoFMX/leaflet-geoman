@@ -14473,7 +14473,7 @@
   var EL = {
       drawArrowLineDialogInit(t = {}) {
         let i = {
-          size: [200, 240],
+          size: [200, 260],
           anchor: [0, -210],
           position: 'topright',
           showArrowToggle: !0,
@@ -14628,7 +14628,7 @@
   var SL = {
       editArrowLineDialogInit(t = {}) {
         let i = {
-          size: [200, 250],
+          size: [200, 270],
           anchor: [0, -210],
           position: 'topright',
           showArrowToggle: !0,
@@ -14818,7 +14818,7 @@
       openColorChangeDialog() {
         this.colorChangeDialog?.open(),
           this.drawArrowLineDialog?.isOpen()
-            ? this.colorChangeDialog.setLocation([260, -210])
+            ? this.colorChangeDialog.setLocation([270, -210])
             : this.colorChangeDialog.setLocation([0, -210]),
           this.updateColorisPosition();
       },
@@ -14830,7 +14830,7 @@
           ? this.colorChangeDialog?.close()
           : (this.colorChangeDialog?.open(),
             this.drawArrowLineDialog?.isOpen()
-              ? this.colorChangeDialog.setLocation([260, -210])
+              ? this.colorChangeDialog.setLocation([270, -210])
               : this.colorChangeDialog.setLocation([0, -210])),
           this.updateColorisPosition();
       },
