@@ -1,7 +1,7 @@
 const EditArrowLineDialogMixins = {
   editArrowLineDialogInit(options = {}) {
     const dialogOptions = {
-      size: [200, 288],
+      size: [200, 250],
       anchor: [0, -210],
       position: 'topright',
       showArrowToggle: true,
@@ -20,7 +20,7 @@ const EditArrowLineDialogMixins = {
       : 'display-none';
     return `
       <div style='padding: 0 1rem;'>
-        <h5 style='margin-top: 0; margin-bottom: 0;'>Arrow Settings</h5>
+        <h4 style='margin-top: 0; margin-bottom: 0;'>Arrow Settings</h4>
         <hr>
         <div class='form-switch form-check cursor-pointer ${showArrowToggle}'>
           <input class='form-check-input my-auto me-2 cursor-pointer' type='checkbox' role='switch' id='edit-arrow-enabled' checked>

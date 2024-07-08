@@ -31,10 +31,18 @@ const PMButton = L.Control.extend({
         this.options.position
       );
     }
-    this.buttonsDomNode = this._makeButton(this._button);
-    this._container.appendChild(this.buttonsDomNode);
+    this._renderButton();
 
     return this._container;
+  },
+  _renderButton() {
+    const oldDomNode = this.buttonsDomNode;
+    this.buttonsDomNode = this._makeButton(this._button);
+    if (oldDomNode) {
+      oldDomNode.replaceWith(this.buttonsDomNode);
+    } else {
+      this._container.appendChild(this.buttonsDomNode);
+    }
   },
   onRemove() {
     this.buttonsDomNode.remove();
@@ -125,31 +133,31 @@ const PMButton = L.Control.extend({
     const actions = {
       cancel: {
         text: getTranslation('actions.cancel'),
+        title: getTranslation('actions.cancel'),
         onClick() {
           this._triggerClick();
         },
-        title: getTranslation('actions.cancel'),
       },
       finishMode: {
         text: getTranslation('actions.finish'),
+        title: getTranslation('actions.finish'),
         onClick() {
           this._triggerClick();
         },
-        title: getTranslation('actions.finish'),
       },
       removeLastVertex: {
         text: getTranslation('actions.removeLastVertex'),
+        title: getTranslation('actions.removeLastVertex'),
         onClick() {
           this._map.pm.Draw[button.jsClass]._removeLastVertex();
         },
-        title: getTranslation('actions.removeLastVertex'),
       },
       finish: {
         text: getTranslation('actions.finish'),
+        title: getTranslation('actions.finish'),
         onClick(e) {
           this._map.pm.Draw[button.jsClass]._finishShape(e);
         },
-        title: getTranslation('actions.finish'),
       },
       changeColor: {
         text: `
@@ -193,6 +201,10 @@ const PMButton = L.Control.extend({
       if (action.title) actionNode.setAttribute('title', action.title);
 
       actionNode.href = '#';
+
+      if (action.title) {
+        actionNode.title = action.title;
+      }
 
       actionNode.innerHTML = action.text;
 
