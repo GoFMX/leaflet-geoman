@@ -11084,8 +11084,7 @@
     close: function () {
       return (
         (this._container.style.visibility = 'hidden'),
-        this._map.fire('dialog:closed', this),
-        this
+        this._map ? (this._map.fire('dialog:closed', this), this) : this
       );
     },
     destroy: function () {
