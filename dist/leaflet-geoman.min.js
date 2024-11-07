@@ -13924,7 +13924,6 @@
             'colorChangeMode',
             this.globalColorChangeModeEnabled()
           ),
-          this.map.off('dialog:moveend', this.updateColorisPosition),
           this.Dialog.closeColorChangeDialog(),
           this._fireGlobalColorChangeModeToggled();
       },
